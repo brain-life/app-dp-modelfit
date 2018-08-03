@@ -28,7 +28,8 @@ fi
 echo "generating $outpath"
 for i in $(seq 1 5); 
 do 
-	echo "try $i"
+	echo "try $i of 5"
+    ls ./compiled
 	MAXMEM=16000000 singularity exec docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/fit_model $alpha_v $alpha_f $lambda_1 $lambda_2 $outpath && break
 	echo "failed.. may retry"
 	sleep 15
