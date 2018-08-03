@@ -1,0 +1,17 @@
+{
+    "dtiinit": "/N/u/hayashis/Karst/testdata/franco/dtiinit/.",
+    "track": "/N/u/hayashis/Karst/testdata/franco/track/track.tck",
+    "afq": "/N/u/hayashis/Karst/testdata/franco/afq/output.mat",
+    "workers": 7,
+    "m": 0.5,
+    "p": 0.5,
+    "n": 1,
+    "L": 45,
+    "a_min": 1.0,
+    "a_max": 9.0,
+    "l1_min": 1.0,
+    "l1_max": 7.0,
+    "l2_min": 0.0,
+    "l2_max": 0.7
+}
+
