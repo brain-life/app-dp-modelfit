@@ -51,14 +51,14 @@ completed_count=$(ls results/*.mat 2>/dev/null | wc -l || true)
 params=$(wc -l params.list)
 
 #did it fail?
-if [ $failed_count != "0" ]; then
-    #if there is any job that's failed, mark as failed (TODO.. too strict?)
-    qstat -f -t $jobid_fit > fail.fit.debug
-    qstat -f $jobid_best > fail.best.debug
-    #./stop_dp.sh
-    echo "some job failed. ($completed_count finished. $running_count running.) please rerun"
-    exit 2
-fi
+#if [ $failed_count != "0" ]; then
+#    #if there is any job that's failed, mark as failed (TODO.. too strict?)
+#    qstat -f -t $jobid_fit > fail.fit.debug
+#    qstat -f $jobid_best > fail.best.debug
+#    #./stop_dp.sh
+#    echo "some job failed. ($completed_count finished. $running_count running.) please rerun"
+#    exit 2
+#fi
  
 #did it finish?
 #hash scontrol 2>/dev/null && scontrol show job $jobid_best | grep "COMPLETED" > /dev/null
@@ -98,7 +98,7 @@ fi
 
 #is fit/best running?
 if [ ! "$running_count" -eq "0" ]; then
-    echo "fitting .. $params running:$running_count completed:$completed_count"
+    echo "fitting .. $params running:$running_count completed:$completed_count failed:$failed_count"
     exit 0
 fi
 
