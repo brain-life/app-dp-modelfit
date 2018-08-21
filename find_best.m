@@ -1,7 +1,6 @@
 function [] = find_best()
 
 if ~isdeployed
-
     %for matlab2
     addpath(genpath('/home/hayashis/git/encode-dp'));
     addpath(genpath('/home/hayashis/git/vistasoft'));
@@ -16,9 +15,16 @@ end
 % load my own config.json
 config = loadjson('config.json')
 
-disp('loading dt6.mat')
-dt6 = loadjson(fullfile(config.dtiinit, 'dt6.json'))
-aligned_dwi = fullfile(config.dtiinit, dt6.files.alignedDwRaw)
+if isfield(config,'dtiinit')
+    disp('using dtiinit aligned dwi')
+    dt6 = loadjson(fullfile(config.dtiinit, 'dt6.json'))
+    dwi = fullfile(config.dtiinit, dt6.files.alignedDwRaw)
+end
+
+if isfield(config,'dwi')
+    disp('using dwi')
+    dwi = config.dwi
+end
 
 %need to use different profile directory to make sure multiple jobs won't share the same directory and crash
 profile_dir=fullfile('./profile', int2str(feature('getpid')));
@@ -35,7 +41,7 @@ alpha_f = 0;
 tic
 disp(['FitFullModel.. (alpha_v, lambda_, lambda_2)=(',num2str(alpha_v),',',num2str(lambda_1),',',num2str(lambda_2),')'])
 [fe, results] = FitFullModel(...
-    aligned_dwi, ...
+    dwi, ...
     config.track, ...
     'bogus', ...
     config.L, ...
