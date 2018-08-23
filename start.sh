@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 rm -f jobid.fit
@@ -43,7 +42,7 @@ mkdir -p results
 
 params=$(cat params.list | wc -l)
 
-#manner
+#slurm cluster
 if hash srun 2>/dev/null; then
     #if all fit_model.sh gets submitted exactly at the same time, it could cause sharp memory usage spike which 
     #leads to job failurer. let's submit job to sleep for a while so that each node will start fit_model in staggered 
@@ -65,12 +64,14 @@ if hash srun 2>/dev/null; then
     echo $best > jobid.best
 fi
 
+#for pbs cluster
 if hash qsub 2>/dev/null; then
     echo "submitting fit_model array(1-$params)"
-    fit=$(qsub -d $PWD -t 1-$params -l nodes=1:ppn=8,vmem=80g,walltime=06:00:00 -o logs/fit.log -e logs/fit.err fit_model.sh)
+    fit=$(qsub -l epilogue=cleantmp.sh -d $PWD -t 1-$params -l nodes=1:ppn=8,vmem=80g,walltime=06:00:00 -o logs/fit.log -e logs/fit.err fit_model.sh)
     echo $fit > jobid.fit
 
     echo "submitting find_best"
-    best=$(qsub -d $PWD -W depend=afterokarray:$fit -l nodes=1:ppn=8,vmem=80g,walltime=03:00:00 -o logs/best.log -e logs/best.err find_best.sh)
+    best=$(qsub -l epilogue=cleantmp.sh -d $PWD -W depend=afterokarray:$fit -l nodes=1:ppn=8,vmem=80g,walltime=03:00:00 -o logs/best.log -e logs/best.err find_best.sh)
     echo $best > jobid.best
 fi
+

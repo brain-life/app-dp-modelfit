@@ -3,6 +3,14 @@
 [ $PBS_ARRAYID ] && TASK_ID=$PBS_ARRAYID
 [ $SLURM_ARRAY_TASK_ID ] && TASK_ID=$SLURM_ARRAY_TASK_ID
 
+[ $PBS_JOBID ] && JOBID=$PBS_JOBID
+[ $SLURM_JOBID ] && JOBID=$SLURM_JOBID
+
+#singularity may fails to remove runtime directory (if cleanupd is killed by cluster)
+#create /tmp sub directory for singularity to contain cachedir and remove it in epilogue
+mkdir /tmp/$JOBID
+export SINGULARITY_LOCALCACHEDIR=/tmp/$JOBID
+
 #pull nth param sets using $SLURM_ARRAY_TASK_ID
 params=$(head -$TASK_ID params.list | tail -1)
 echo "Running TASK_ID:$TASK_ID $params ...................."
@@ -34,3 +42,8 @@ do
 	echo "failed.. may retry"
 	sleep 15
 done
+
+#should be done by epilogue, right?? (what about slurm?)
+#echo "removing tmp directory .. which should be empty by now"
+#rmdir -rf /tmp/$JOBID
+
