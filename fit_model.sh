@@ -6,6 +6,8 @@
 [ $PBS_JOBID ] && JOBID=$PBS_JOBID
 [ $SLURM_JOBID ] && JOBID=$SLURM_JOBID
 
+JOBID=$(echo $JOBID | tr '[\[\]]' '_') #singularity doesn't like "[2]"
+
 #singularity may fails to remove runtime directory (if cleanupd is killed by cluster)
 #create /tmp sub directory for singularity to contain cachedir and remove it in epilogue
 mkdir /tmp/$JOBID

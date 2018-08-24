@@ -9,6 +9,8 @@ SESSION=$5
 #$8 = queue name 
 #$9 = account string 
 
+JOBID=$(echo $JOBID | tr '[\[\]]' '_') #singularity doesn't like "[2]"
+
 echo "epilogue/cleantmp.sh: removing /tmp/$JOBID"
 sleep 10 #give singularity/cleanupd to do some work (before getting killed by wall)
 rm -rf /tmp/$JOBID

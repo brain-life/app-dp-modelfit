@@ -4,6 +4,8 @@ set -e
 [ $PBS_JOBID ] && JOBID=$PBS_JOBID
 [ $SLURM_JOBID ] && JOBID=$SLURM_JOBID
 
+JOBID=$(echo $JOBID | tr '[\[\]]' '_') #singularity doesn't like "[2]"
+
 mkdir /tmp/$JOBID
 export SINGULARITY_LOCALCACHEDIR=/tmp/$JOBID
 MAXMEM=32000000 singularity exec docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/find_best
